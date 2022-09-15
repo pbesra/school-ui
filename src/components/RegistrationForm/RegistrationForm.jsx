@@ -8,7 +8,21 @@ const RegistrationForm=()=>{
     const [currentAddress, setCurrentAddress]=useState();
     const [hasGuardian, setHasGuardian]=useState(false);
     const [isPermanentAddressSameAsCurrent, setIsPermanentAddressSameAsCurrent]=useState(false);
+    const [guardian, setGuardian]=useState();
     console.log(studentDetails);
+    const onSubmitForm=()=>{
+        let permanentAddressObj=permanentAddress;
+        permanentAddressObj.type='permanent';
+        let currentAddressObj=currentAddress;
+        currentAddressObj.type='current'
+        const studentFullDetails={
+            personalDetails: studentDetails,
+            address:[permanentAddressObj, currentAddressObj],
+            guardian,
+        }
+        console.log(studentFullDetails);
+    }
+    console.log('guardian------- , ', guardian);
     return(
         <>
             <div 
@@ -51,7 +65,11 @@ const RegistrationForm=()=>{
                     No: <input onChange={(e)=>setHasGuardian(false)} name="addressSwitch"  type='radio'/>
                 </div>
                 <div>
-                    <UserBasicForm type='guardian' isValid={hasGuardian} label='Guardian details'/>
+                    <UserBasicForm type='guardian' isValid={hasGuardian} label='Guardian details' getUserBasicDetails={setGuardian}/>
+                </div>
+                <div>
+                    <button>Cancel</button>
+                    <button onClick={onSubmitForm}>Submit</button>
                 </div>
             </div>
         </>
