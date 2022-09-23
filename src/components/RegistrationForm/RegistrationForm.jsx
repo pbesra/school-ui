@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import StudentForm from "../StudentForm/StudentForm";
 import Address from "../Address/Address";
 import UserBasicForm from "../UserBasicForm/UserBasicForm";
+
 const RegistrationForm=()=>{
     const [studentDetails, setStudentDetails]=useState();
     const [permanentAddress, setPermanentAddress]=useState();
@@ -9,6 +10,7 @@ const RegistrationForm=()=>{
     const [hasGuardian, setHasGuardian]=useState(false);
     const [isPermanentAddressSameAsCurrent, setIsPermanentAddressSameAsCurrent]=useState(false);
     const [guardian, setGuardian]=useState();
+    
     console.log(studentDetails);
     const onSubmitForm=()=>{
         let permanentAddressObj=permanentAddress;
@@ -22,9 +24,9 @@ const RegistrationForm=()=>{
         }
         console.log(studentFullDetails);
     }
-    console.log('guardian------- , ', guardian);
     return(
         <>
+            
             <div 
                 style={
                     {
@@ -37,6 +39,7 @@ const RegistrationForm=()=>{
                         
                     }}>
                 <div style={{display:'flex', flexDirection:'column'}}>
+                    
                     <StudentForm type='student' getPersonalDetails={setStudentDetails}/>
                 </div>
                 <div>

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from "react";
 
 const Address=({type, getAddress, defaultValues, label})=>{
-    const identity= type ?? 'first';
+    const identity= type ?? 'Address';
     const [address, setAddress]=useState('');
     const [pinCode, setPinCode]=useState('');
     

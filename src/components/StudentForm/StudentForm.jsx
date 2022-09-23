@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Box, Grid } from "@mui/material";
+
 const Input = ({ children }) => {
     return <input {...children} />
 }
 const StudentForm = ({ type, getPersonalDetails }) => {
-    const identity = type ?? "first";
-    const [nameInitial, setNameInitial] = useState("");
+    const identity = type ?? "StudentForm";
+    const [gender, setGender] = useState("Male");
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -19,7 +21,7 @@ const StudentForm = ({ type, getPersonalDetails }) => {
             const value = e.target.value;
             switch (e.currentTarget.id) {
                 case `${identity}_nameInitial`:
-                    setNameInitial(value);
+                    setGender(value);
                     break;
                 case `${identity}_firstName`:
                     setFirstName(value);
@@ -60,7 +62,7 @@ const StudentForm = ({ type, getPersonalDetails }) => {
 
     useEffect(() => {
         getPersonalDetails?.({
-            nameInitial,
+            gender,
             firstName,
             middleName,
             lastName,
@@ -72,7 +74,7 @@ const StudentForm = ({ type, getPersonalDetails }) => {
             dateOfBirth,
         });
     }, [
-        nameInitial,
+        gender,
         firstName,
         middleName,
         lastName,
@@ -85,22 +87,24 @@ const StudentForm = ({ type, getPersonalDetails }) => {
     ]);
     return (
         <>
-            
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_nameInitial`}>Name initial:</label>
-                <select
-                    style={{ margin: 4 }}
-                    id={`${identity}_nameInitial`}
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                >
-                    <option value="Mr">Mr</option>
-                    <option value="Mrs">Mrs</option>
-                    <option value="">None</option>
-                </select>
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
+
+            <Grid container>
+                <Grid item xs={4}>
+                    <label for={`${identity}_gender`}>Name initial:</label>
+                    <select
+                        style={{ margin: 4 }}
+                        id={`${identity}_gender`}
+                        defaultValue={"Male"}
+                        onChange={(e) => {
+                            onChangePersonDetails(e);
+                        }}
+                    >
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+
+                    </select>
+                </Grid>
+                <Grid item xs={4}>
                 <label for={`${identity}_firstName`}>First name:</label>
                 <input
                     style={{ margin: 4 }}
@@ -110,8 +114,8 @@ const StudentForm = ({ type, getPersonalDetails }) => {
                     }}
                     placeholder="First name"
                 />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
+                </Grid>
+                <Grid item xs={4}>
                 <label for={`${identity}_middleName`}>Middle name:</label>
                 <input
                     style={{ margin: 4 }}
@@ -121,8 +125,8 @@ const StudentForm = ({ type, getPersonalDetails }) => {
                     }}
                     placeholder="Middle name"
                 />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
+                </Grid>
+                <Grid item xs={4}>
                 <label for={`${identity}_lastName`}>Last name:</label>
                 <input
                     style={{ margin: 4 }}
@@ -132,75 +136,87 @@ const StudentForm = ({ type, getPersonalDetails }) => {
                     }}
                     placeholder="Last name"
                 />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_dateOfBirth`}>Last name:</label>
-                <input
-                    style={{ margin: 4 }}
-                    id={`${identity}_dateOfBirth`}
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                    type='date'
-                    placeholder="Last name"
-                />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_contactNumber`}>Last name:</label>
-                <input
-                    style={{ margin: 4 }}
-                    id={`${identity}_contactNumber`}
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                    placeholder="Contact number"
-                />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_email`}>Last name:</label>
-                <input
-                    style={{ margin: 4 }}
-                    id={`${identity}_email`}
-                    type="email"
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                    placeholder="Email"
-                />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_fatherName`}>Father's name:</label>
-                <input
-                    style={{ margin: 4 }}
-                    id={`${identity}_fatherName`}
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                    placeholder="Father's name"
-                />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_motherName`}>Mother's name:</label>
-                <input
-                    style={{ margin: 4, marginLeft: 20 }}
-                    id={`${identity}_motherName`}
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                    placeholder="Mother's name"
-                />
-            </div>
-            <div style={{display:'flex', flexDirection:'row'}}>
-                <label for={`${identity}_parentContactNumber`}>Parent contact number:</label>
-                <input
-                    style={{ margin: 4, marginLeft: 20 }}
-                    id={`${identity}_parentContactNumber`}
-                    onChange={(e) => {
-                        onChangePersonDetails(e);
-                    }}
-                    placeholder="Parent contact number"
-                />
-            </div>
+                </Grid>
+                <Grid item xs={4}>
+                    <label for={`${identity}_dateOfBirth`}>Last name:</label>
+                    <input
+                        style={{ margin: 4 }}
+                        id={`${identity}_dateOfBirth`}
+                        onChange={(e) => {
+                            onChangePersonDetails(e);
+                        }}
+                        type='date'
+                        placeholder="Last name"
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <label for={`${identity}_contactNumber`}>Last name:</label>
+                    <input
+                        style={{ margin: 4 }}
+                        id={`${identity}_contactNumber`}
+                        onChange={(e) => {
+                            onChangePersonDetails(e);
+                        }}
+                        placeholder="Contact number"
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Box sx={{display:'flex', flexDirection:'column', width:200, border:'1px solid red'}}>
+                        <label style={{textAlign:'left'}} for={`${identity}_email`}>Last name:</label>
+                            <input
+                                
+                                id={`${identity}_email`}
+                                type="email"
+                                onChange={(e) => {
+                                    onChangePersonDetails(e);
+                                }}
+                                placeholder="Email"
+                            />
+                    </Box>
+                        
+                </Grid>
+                <Grid item xs={4}>
+                <Box sx={{display:'flex', flexDirection:'column', width:200, border:'1px solid red'}}>
+                <label style={{textAlign:'left'}} for={`${identity}_fatherName`}>Father's name:</label>
+                    <input
+                        
+                        id={`${identity}_fatherName`}
+                        onChange={(e) => {
+                            onChangePersonDetails(e);
+                        }}
+                        placeholder="Father's name"
+                    />
+                </Box>
+                    
+                </Grid>
+                <Grid item xs={4}>
+                    <Box sx={{display:'flex', flexDirection:'column', width:200, border:'1px solid red'}}>
+                        <label style={{textAlign:'left'}} for={`${identity}_motherName`}>Mother's name:</label>
+                        <input
+                            
+                            id={`${identity}_motherName`}
+                            onChange={(e) => {
+                                onChangePersonDetails(e);
+                            }}
+                            placeholder="Mother's name"
+                        />
+                    </Box>
+                </Grid>
+                <Grid item xs={4}>
+                    <Box sx={{display:'flex', flexDirection:'column', width:200, border:'1px solid red'}}>
+                        <label style={{textAlign:'left'}} for={`${identity}_parentContactNumber`}>Parent contact number:</label>
+                        <input
+                            id={`${identity}_parentContactNumber`}
+                            onChange={(e) => {
+                                onChangePersonDetails(e);
+                            }}
+                            placeholder="Parent contact number"
+                        />
+                    </Box>
+                    
+                </Grid>
+            </Grid>
+            
         </>
     );
 };
