@@ -1,15 +1,25 @@
-import React, {useState, useEffect, useCallback} from "react";
+import { Box, Grid } from "@mui/material";
+import React, { useState, useEffect, useCallback, memo } from "react";
+import RequiredAsterisk from "../RequiredAsterisk/RequiredAsterisk";
 
-const Address=({type, getAddress, defaultValues, label})=>{
-    const identity= type ?? 'Address';
-    const [address, setAddress]=useState('');
-    const [pinCode, setPinCode]=useState('');
-    
-    const onChangeAddress=useCallback((e)=>{
-        const value=e.target.value;
-        switch(e.currentTarget.id){
-            case `${identity}_address`:
-                setAddress(value);
+const Address = ({
+    type,
+    getAddress,
+    defaultValues,
+    label,
+    isAddressDisabled,
+    isRequired
+}) => {
+    console.log('########### Address #############');
+    const identity = type ?? 'Address';
+    const [addressName, setAddressName] = useState('');
+    const [pinCode, setPinCode] = useState('');
+
+    const onChangeAddress = useCallback((e) => {
+        const value = e.target.value;
+        switch (e.currentTarget.id) {
+            case `${identity}_addressName`:
+                setAddressName(value);
                 break;
             case `${identity}_pinCode`:
                 setPinCode(value);
@@ -18,34 +28,69 @@ const Address=({type, getAddress, defaultValues, label})=>{
                 break;
         }
     }, []);
-    useEffect(()=>{
-        setAddress(defaultValues?.address ?? '');
+    useEffect(() => {
+        setAddressName(defaultValues?.addressName ?? '');
         setPinCode(defaultValues?.pinCode ?? '');
-    }, [defaultValues?.address, defaultValues?.pinCode]);
-    useEffect(()=>{
+    }, [defaultValues?.addressName, defaultValues?.pinCode]);
+    useEffect(() => {
         getAddress?.({
-            address,
+            addressName: addressName,
+            type,
             pinCode,
         });
-    }, [address, pinCode]);
-    return(
+    }, [
+        addressName,
+        pinCode,
+        getAddress,
+        type,
+    ]);
+    return (
         <>
-            <div>{label ?? ''}</div>
-            <textarea 
-                value={address}
-                disabled={defaultValues?true:false}
-                onChange={(e)=>{onChangeAddress(e)}} 
-                id={`${identity}_address`} 
-                placeholder="Enter address">
-            </textarea>
-            <input 
-                value={pinCode}
-                disabled={defaultValues?true:false}
-                onChange={(e)=>{onChangeAddress(e)}} 
-                id={`${identity}_pinCode`} 
-                type='number' 
-                placeholder="Enter pin code"
-            />
+
+            <Grid item xs={3} md={4}>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <label
+                        style={{ textAlign: 'left', color: '#666666' }}
+                    >
+                        {label ?? 'Address'}
+                        {
+                            isRequired ? <RequiredAsterisk /> : null
+                        }
+                    </label>
+                    <textarea
+                        required={isRequired}
+                        style={{ resize: 'vertical', margin: 3, maxHeight: 255 }}
+                        value={addressName}
+                        disabled={isAddressDisabled}
+                        onChange={(e) => { onChangeAddress(e) }}
+                        id={`${identity}_addressName`}
+                        placeholder="Enter address">
+                    </textarea>
+                </Box>
+            </Grid>
+            <Grid item xs={3} md={4}>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <label
+                        style={{ textAlign: 'left', color: '#666666' }}
+                    >
+                        Pin code
+                        {
+                            isRequired ? <RequiredAsterisk /> : null
+                        }
+                    </label>
+                    <input
+                        required={isRequired}
+                        style={{ margin: 3 }}
+                        value={pinCode}
+                        disabled={isAddressDisabled}
+                        onChange={(e) => { onChangeAddress(e) }}
+                        id={`${identity}_pinCode`}
+                        type='number'
+                        placeholder="Enter pin code"
+                    />
+                </Box>
+            </Grid>
+
         </>
     );
 }
