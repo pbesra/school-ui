@@ -36,6 +36,9 @@ const RegistrationForm = () => {
             });
     }, []);
     console.log('########### RegistrationForm #############');
+    const getStudentData=(data)=>{
+
+    }
     return (
         <>
 
@@ -56,6 +59,7 @@ const RegistrationForm = () => {
                                 <StudentForm
                                     type='student'
                                     setStudentData={setStudentData}
+                                    getStudentData={getStudentData}
                                 />
                             </Grid>
                         </Grid>

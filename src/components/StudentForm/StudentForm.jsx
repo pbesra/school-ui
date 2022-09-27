@@ -6,12 +6,13 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { v4 as uuidv4 } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RequiredAsterisk from "../RequiredAsterisk/RequiredAsterisk";
-import '../../public/css/main.css';
+
 
 
 const StudentForm = ({
     type,
     setStudentData,
+    getStudentData
 }) => {
     console.log('########### StudentForm #############');
     const identity = type ?? "StudentForm";
