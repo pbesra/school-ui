@@ -1,20 +1,7 @@
 
-import React, { useState } from 'react';
-
-import { useForm } from 'react-hook-form';
-import FormGrid from '../FormGrid/FormGrid';
-import { FormProvider } from 'react-hook-form';
-
+import React from 'react';
+import AppProvider from '../AppProvider/AppProvider';
 const Home = () => {
-
-    const methods= useForm({
-        defaultValues: {
-            address:[],
-        }
-    });
-    
-    return(<FormProvider {...methods}>
-        <FormGrid/>
-    </FormProvider>);
+    return <AppProvider/>
 }
 export default Home;

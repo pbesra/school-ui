@@ -1,8 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { Controller } from "react-hook-form";
 import PersonalForm from "../PersonalForm/PersonalForm";
 
-const GuardianForm = ({ control, fieldName }) => {
+
+const GuardianForm = ({ control, fieldName, formLabel }) => {
+    
     return (
         <>
             <Box
@@ -15,7 +17,7 @@ const GuardianForm = ({ control, fieldName }) => {
                     '::-webkit-scrollbar': { display: 'none' }
                 }}
             >
-                <PersonalForm fieldName={fieldName} control={control} />
+                <PersonalForm formLabel={formLabel} fieldName={fieldName} control={control} />
             </Box>
 
         </>

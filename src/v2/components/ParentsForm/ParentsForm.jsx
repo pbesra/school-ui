@@ -1,17 +1,18 @@
-import { Box, Checkbox, IconButton, TextField } from "@mui/material";
+import { Box, Checkbox, Divider, IconButton, TextField } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 
 
-const ParentsForm = ({getGuardian, hasGuardian, control}) => {
+const ParentsForm = ({getGuardian, hasGuardian, control, formLabel}) => {
+    const {formState: {errors}}=useFormContext();
     const [contacts, setContacts] = useState([]);
     const onClickAddContact = () => {
+        console.log('onClickAdd');
         let tempContacts = [];
-
         if (contacts?.length < 2) {
             let nextlabelName = contacts.length === 1 ? 'Contact number 2' : 'Contact number 1';
             if (contacts.length === 0) {
@@ -21,20 +22,21 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
                     ? 'Contact number 1' : 'Contact number 2';
             }
             const obj = { id: uuidv4(), label: nextlabelName, isEdit: false };
+            console.log('new contact obj', obj);
             tempContacts = [...contacts, obj];
             setContacts(tempContacts);
-            console.log(tempContacts);
         }
 
     };
     const onClickRemoveContact = (id) => {
-        console.log(id, contacts);
+        console.log('onClickRemove', id, contacts);
         let tempContacts = contacts.filter((x) => {
             const obj = x;
             if (obj.id !== id) {
                 return obj;
             }
         });
+        console.log(tempContacts);
         setContacts(tempContacts);
 
     };
@@ -42,15 +44,24 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
     const onChangeGuardian=(event)=>{
         getGuardian?.(event.target.checked);
     }
-    
+    console.log('outside contacts', contacts, contacts.length);
     return (
         <>
             <Box sx={{ maxHeight: '100%', overflowY: 'auto',  '::-webkit-scrollbar':{display: 'none' } }}>
+                 <span style={{color:'#518DFF'}}>{formLabel}</span>
+                <Divider sx={{margin:1}}/>
                 <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                     <Controller
-                        name="parents.hasGuardian"
+                        name="hasGuardian"
                         control={control}
-                        render={({field})=><Checkbox {...field} checked={hasGuardian}  onChange={onChangeGuardian} />}
+                        defaultValue={false}
+                        render={({field})=>
+                            <Checkbox 
+                                {...field} 
+                                checked={!!hasGuardian}  
+                                onChange={onChangeGuardian} 
+                            />
+                        }
                     />
                     <span className="box" style={{ fontSize: 12 }}>
                         If you have guardian
@@ -67,8 +78,9 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
                             label="Father's name"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            required
                             InputLabelProps={{ required: true }}
+                            error={!!errors.parents?.fatherName}
+                            helperText={errors.parents?.fatherName?.message}
                         />}
                     />
                 </Box>
@@ -83,8 +95,9 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
                             label="Mother's name"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            required
                             InputLabelProps={{ required: true }}
+                            error={!!errors.parents?.motherName}
+                            helperText={errors.parents?.motherName?.message}
                         />}
                     />
                 </Box>
@@ -95,12 +108,13 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
                         control={control}
                         render={({field})=>
                         <TextField
-                        {...field}
-                        label="Email"
-                        variant="standard"
-                        sx={{ width: 250, margin: 1 }}
-                        required
-                        InputLabelProps={{ required: true }}
+                            {...field}
+                            label="Email"
+                            variant="standard"
+                            sx={{ width: 250, margin: 1 }}
+                            InputLabelProps={{ required: true }}
+                            error={!!errors?.parents?.email}
+                            helperText={errors?.parents?.email?.message}
                     />}
                     />
                 </Box>
@@ -118,23 +132,25 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
                         onClick={contacts?.length >= 2 ? null : onClickAddContact}
 
                     >
-                        <AddCircleIcon />
+                        <AddCircleIcon sx={{color: contacts?.length >= 2 ? '' :'#5A5A5A'}}/>
                         <span className="box" style={{ fontSize: '13px' }}>Add contact</span>
                     </Box>
                 </Box>
                 <Box>
                     <Controller
                         control={control}
-                        name='parents.contacts[0].parentContact'
+                        name='parents.parentMainContact'
                         defaultValue=''
                         render={({field})=>
                         <TextField
                             {...field}
+                            type='number'
                             label="Primary contact"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            required
                             InputLabelProps={{ required: true }}
+                            error={!!errors.parents?.parentMainContact}
+                            helperText={errors.parents?.parentMainContact?.message}
                         />}
                     />
                 </Box>
@@ -146,14 +162,17 @@ const ParentsForm = ({getGuardian, hasGuardian, control}) => {
                         >
                             <Controller
                                 control={control}
-                                name={`parents.contacts[${index+1}].parentContact`}
+                                name={`parents.contacts${index}`}
                                 defaultValue=''
                                 render={({field})=>
                                 <TextField
                                     {...field}
+                                    type='number'
                                     label={obj.label}
                                     variant="standard"
                                     sx={{ width: 220, margin: 1 }}
+                                    error={!!errors?.parents?.[`contacts${index}`]}
+                                    helperText={errors?.parents?.[`contacts${index}`]?.message}
                                 />}
                             />
                             <IconButton disableRipple={true} disableFocusRipple={true} onClick={() => onClickRemoveContact(obj.id)}>

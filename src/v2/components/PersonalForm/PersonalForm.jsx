@@ -1,7 +1,8 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { Controller } from "react-hook-form";
+import { Box, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Controller, useFormContext } from "react-hook-form";
 import React from 'react';
-const PersonalForm = ({ id, control, fieldName }) => {
+const PersonalForm = ({ id, control, fieldName,formLabel }) => {
+    const {formState: {errors}}=useFormContext();
     return (
         <Box sx={{
             display: 'flex',
@@ -11,9 +12,11 @@ const PersonalForm = ({ id, control, fieldName }) => {
             '::-webkit-scrollbar': { display: 'none' },
             padding: 4,
         }}>
+            <span style={{color:'#518DFF'}}>{formLabel}</span>
+            <Divider sx={{margin:1}}/>
             <Box>
                 <Controller
-                    name={`${fieldName}.gender` ?? 'gender'}
+                    name={`${fieldName}Gender`}
                     control={control}
                     defaultValue='Female'
                     render={({ field }) =>
@@ -37,7 +40,7 @@ const PersonalForm = ({ id, control, fieldName }) => {
             </Box>
             <Box>
                 <Controller
-                    name={`${fieldName}.firstName` ?? 'firstName'}
+                    name={`${fieldName}FirstName`}
                     control={control}
                     defaultValue={''}
                     render={({ field }) =>
@@ -46,61 +49,61 @@ const PersonalForm = ({ id, control, fieldName }) => {
                             label="First name"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            required
                             InputLabelProps={{ required: true }}
+                            error={!!errors?.[`${fieldName}FirstName`]}
+                            helperText={errors?.[`${fieldName}FirstName`]?.message}
+                            
                         />}
                 />
             </Box>
             <Box>
                 <Controller
-                    name={`${fieldName}.middleName` ?? 'middleName'}
+                    name={`${fieldName}MiddleName`}
                     control={control}
                     defaultValue={''}
                     render={({ field }) =>
                         <TextField
                             {...field}
-                            required
                             label="Middle name"
                             variant="standard"
                             sx={{ width: 250, margin: 1, }}
-
-                            InputLabelProps={{ required: true }}
                         />}
                 />
 
             </Box>
             <Box>
                 <Controller
-                    name={`${fieldName}.lastName` ?? 'lastName'}
+                    name={`${fieldName}LastName`}
                     control={control}
                     defaultValue={''}
                     render={({ field }) =>
                         <TextField
                             {...field}
-                            required
                             label="Last name"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
                             InputLabelProps={{ required: true }}
+                            error={!!errors?.[`${fieldName}LastName`]}
+                            helperText={errors?.[`${fieldName}LastName`]?.message}
                         />}
                 />
 
             </Box>
             <Box>
                 <Controller
-                    name={`${fieldName}.dateOfBirth` ?? 'dateOfBirth'}
+                    name={`${fieldName}DateOfBirth`}
                     control={control}
                     defaultValue={''}
                     render={({ field }) =>
                         <TextField
                             {...field}
-                            required
                             type='date'
                             label="Date of birth"
                             variant="standard"
                             sx={{ marginTop: 3 }}
-
-                            InputLabelProps={{ shrink: true, required: true }}
+                            InputLabelProps={{ shrink: true, required: fieldName==='person'?true:false }}
+                            error={!!errors?.[`${fieldName}DateOfBirth`]}
+                            helperText={errors?.[`${fieldName}DateOfBirth`]?.message}
                         />
 
                     }
@@ -109,18 +112,19 @@ const PersonalForm = ({ id, control, fieldName }) => {
             </Box>
             <Box>
                 <Controller
-                    name={`${fieldName}.email` ?? 'email'}
+                    name={`${fieldName}Email`}
                     control={control}
                     defaultValue={''}
                     render={({ field }) =>
                         <TextField
                             {...field}
-                            required
                             type='email'
                             label="Email"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            InputLabelProps={{ required: true }}
+                            InputLabelProps={{ required: fieldName==='person'?false:true }}
+                            error={!!errors?.[`${fieldName}Email`]}
+                            helperText={errors?.[`${fieldName}Email`]?.message}
                         />
                     }
                 />
@@ -128,17 +132,21 @@ const PersonalForm = ({ id, control, fieldName }) => {
             </Box>
             <Box>
                 <Controller
-                    name={`${fieldName}.contact` ?? 'contact'}
+                    name={`${fieldName}Contact`}
                     control={control}
                     defaultValue={''}
                     render={({ field }) =>
                         <TextField
                             {...field}
-                            required
+                            type='number'
                             label="Contact"
                             variant="standard"
                             sx={{ width: 250 }}
-                            InputLabelProps={{ required: true }}
+                            // need better approach: either create a new component or 
+                            // make it customizable
+                            InputLabelProps={{ required: fieldName==='person'?false:true }}
+                            error={!!errors?.[`${fieldName}Contact`]}
+                            helperText={errors?.[`${fieldName}Contact`]?.message}
                         />}
                 />
 

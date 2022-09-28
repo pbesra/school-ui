@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 
-const SideBarContent = ({ sideBarItems, onClickButton }) => {
+const SideBarContent = ({ sideBarItems, onClickSideBarItem }) => {
 
     return (
         <>
@@ -22,7 +22,7 @@ const SideBarContent = ({ sideBarItems, onClickButton }) => {
 
                                     }}
                                     key={`b${index}`}
-                                    onClick={() => onClickButton(name)}
+                                    onClick={() => onClickSideBarItem(name)}
 
                                 >
                                     {label}

@@ -7,7 +7,8 @@ const AddressListForm = ({
     addressList,
     onChangeAddressType,
     addressTypeValue,
-    control
+    control,
+    formLabel,
 }) => {
 
     const onChangeAddress = (event) => {
@@ -22,9 +23,12 @@ const AddressListForm = ({
             '::-webkit-scrollbar': { display: 'none' }
         }}
     >
+        
+        <span style={{color:'#518DFF'}}>{formLabel}</span>
+        <Divider sx={{margin:1}}/>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Controller
-                name="person.isPermanentAddressEqualCurrent"
+                name="isPermanentAddressEqualCurrent"
                 control={control}
                 render={({ field }) => <Checkbox {...field} checked={addressTypeValue} onChange={onChangeAddress} />}
             />

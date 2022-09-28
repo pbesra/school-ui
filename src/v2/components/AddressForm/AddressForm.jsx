@@ -1,6 +1,6 @@
 import { Box, TextField } from "@mui/material";
 import React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 const AddressForm = ({
     type,
     label,
@@ -12,7 +12,7 @@ const AddressForm = ({
     control,
     
 }) => {
-    
+    const {formState: {errors}}=useFormContext();
     return <>
         <Box>
             {label}
@@ -30,7 +30,6 @@ const AddressForm = ({
                             multiline
                             variant="filled"
                             disabled={isDisabled}
-                            required={isRequired}
                             sx={{ width: 300, margin: 2, }}
                             InputLabelProps={{ required: isRequired }}
                             inputProps={{
@@ -38,6 +37,8 @@ const AddressForm = ({
                                     maxHeight: 100,
                                 },
                             }}
+                            error={!!errors?.[`${fieldName}`]?.addressName}
+                            helperText={errors?.[`${fieldName}`]?.addressName?.message}
                         />}
                 />
             </Box>
@@ -61,9 +62,10 @@ const AddressForm = ({
                             variant="standard"
                             type='number'
                             sx={{ width: 300, margin: 2 }}
-                            required={isRequired}
                             disabled={isDisabled}
                             InputLabelProps={{ required: isRequired }}
+                            error={!!errors?.[`${fieldName}`]?.pinCode}
+                            helperText={errors?.[`${fieldName}`]?.pinCode?.message}
                         />}
                 />
             </Box>

@@ -1,90 +1,50 @@
-import { Box, Button, Grid } from '@mui/material';
 import React, { useState } from 'react';
+import { Box, Button, CircularProgress, Grid } from '@mui/material';
 import SideBarContent from '../SideBarContent/SideBarContent';
 import MainContent from '../MainContent/MainContent';
-import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { useEffect } from 'react';
+import { dataMapper } from '../../utils/dataMapper/dataMapper';
+import { FormInitObjects } from '../../resources/dataResources';
+import Resource from '../../resources/constants';
+import { useCallback } from 'react';
+
+
+
 const FormGrid = () => {
-    const activeColor = '#518DFF';
-    const inActiveColor = '#5A5A5A';
-    const { control, reset, handleSubmit, setValue, getValues, } = useFormContext();
+    const { control, handleSubmit, setValue, formState:{errors}, clearErrors} = useFormContext();
     const watchedFormFields=useWatch({name: 'permanentAddress'});
-    const watchedPermanentCurrentAddress=useWatch({name: 'person.isPermanentAddressEqualCurrent'});
+    const watchedPermanentCurrentAddress=useWatch({name: 'isPermanentAddressEqualCurrent'});
+    const watchedHasGuardian=useWatch({name: 'hasGuadian'});
         
-    const [sideBarItems, setSideBarItems] = useState([
-        {
-            name: 'personal',
-            label: 'Personal details',
-            isOpen: true,
-            style: {
-                width: '100%',
-                height: '50px',
-                backgroundColor: '#F9F9F9',
-                color: activeColor,
-            },
-            isVisible: true,
-        },
-        {
-            name: 'address',
-            label: 'Address details',
-            isOpen: false,
-            style: {
-                width: '100%',
-                height: '50px',
-                backgroundColor: '#F9F9F9',
-                color: inActiveColor,
-            },
-            isVisible: true,
-        },
-        {
-            name: 'parents',
-            label: 'Parents details',
-            isOpen: false,
-            style: {
-                width: '100%',
-                height: '50px',
-                backgroundColor: '#F9F9F9',
-                color: inActiveColor,
-            },
-            isVisible: true,
-        },
-        {
-            name: 'guardian',
-            label: 'Guardian details',
-            isOpen: false,
-            style: {
-                width: '100%',
-                height: '50px',
-                backgroundColor: '#F9F9F9',
-                color: inActiveColor,
-            },
-            isVisible: false,
-        },
-
-    ]);
+    const [sideBarItems, setSideBarItems] = useState(FormInitObjects);
     const [currentSideBarIndex, setCurrentSideBarIndex] = useState(0);
+    const [hasGuardian, setHasGuardian] = useState(false);
+    const [addressTypeValue, setAddressTypeValue] = useState(false);
+    const [isLoading, setLoading]=useState(false);
+    
 
-    const setAttr = (item, attr) => {
+    const setAttr = useCallback((item, attr) => {
         item.style.color = attr.color;
         item.isOpen = attr.isOpen;
         return item;
-    }
-    const onClickButton = (name) => {
+    }, []);
+    const onClickSideBarItem = useCallback((name) => {
         let currentIndex = currentSideBarIndex;
         const items = sideBarItems.map((x, index) => {
             let obj = x;
-            obj = setAttr(obj, { isOpen: false, color: inActiveColor });
+            obj = setAttr(obj, { isOpen: false, color: Resource.colors.inActiveColor });
             if (obj.name === name) {
-                obj = setAttr(obj, { isOpen: true, color: activeColor });
+                obj = setAttr(obj, { isOpen: true, color: Resource.colors.activeColor });
                 currentIndex = index;
             }
             return obj;
         });
         setCurrentSideBarIndex(currentIndex);
         setSideBarItems(items);
-    }
+    }, []);
 
-    const onClickArrow = (direction) => {
+    const onClickArrow = useCallback((direction) => {
         console.log(direction);
         let newIndex = currentSideBarIndex;
         if (direction === 'right' && currentSideBarIndex < sideBarItems.length - 1) {
@@ -97,16 +57,18 @@ const FormGrid = () => {
             let newSideBarItems = sideBarItems;
             newSideBarItems[currentSideBarIndex] = setAttr(
                 newSideBarItems[currentSideBarIndex],
-                { isOpen: false, color: inActiveColor }
+                { isOpen: false, color: Resource.colors.inActiveColor }
             );
-            newSideBarItems[newIndex] = setAttr(sideBarItems[newIndex], { isOpen: true, color: activeColor });
+            newSideBarItems[newIndex] = setAttr(
+                                            sideBarItems[newIndex], 
+                                            { isOpen: true, color: Resource.colors.activeColor });
             setCurrentSideBarIndex(newIndex);
             setSideBarItems(newSideBarItems);
         }
-    }
-    const [hasGuardian, setHasGuardian] = useState(false);
-    const getGuardian = (isGuardian) => {
-        const tempItems = sideBarItems.flatMap((x) => {
+    }, [sideBarItems, setSideBarItems, setCurrentSideBarIndex, setAttr, currentSideBarIndex]);
+    
+    const getGuardian = useCallback((isGuardian) => {
+        const tempItems = sideBarItems.map((x) => {
             let obj = x;
             if (x.name === 'guardian') {
                 obj.isVisible = isGuardian;
@@ -115,22 +77,43 @@ const FormGrid = () => {
         });
         setHasGuardian(isGuardian);
         setSideBarItems(tempItems);
-        setValue('parents.hasGuardian', isGuardian);
-    }
-    const [addressTypeValue, setAddressTypeValue] = useState(false);
-    const onChangeAddressType = (addressValue) => {
+        setValue('hasGuardian', isGuardian);
+    }, []);
+
+    
+    const onChangeAddressType = useCallback((addressValue) => {
         setAddressTypeValue(addressValue);
-        setValue('person.isPermanentAddressEqualCurrent', !!addressValue);
-        console.log(addressValue);
-    }
-    const onSubmit = (data) => {
+        setValue('isPermanentAddressEqualCurrent', !!addressValue);
+        
+    }, [setValue]);
+    const onSubmit = useCallback((data) => {
+        setLoading(true);
         console.log(data);
-    }
+        // const fullData=dataMapper(data);
+        // console.log(fullData);
+        setLoading(false);
+    }, []);
+    console.log('errors', errors);
     useEffect(()=>{
         if(!!watchedPermanentCurrentAddress){
-            setValue("currentAddress", watchedFormFields);
+            setValue("currentAddress.addressName", watchedFormFields?.addressName ?? '');
+            setValue("currentAddress.pinCode", watchedFormFields?.pinCode ?? '');
         }
     }, [watchedFormFields, setValue, watchedPermanentCurrentAddress]);
+
+    // Remove errors from guardian if no guardian (if selected earlier)
+    useEffect(()=>{
+        if(!hasGuardian){
+            const items=['FirstName', 'LastName', 'Contact', 'dDateOfBirth'];
+            items.forEach((name)=>{
+                const key=`guardian${name}`;
+                if(errors?.[key]){
+                    console.log('remove error for, ', key);
+                    clearErrors(key);
+                }
+            });
+        }
+    }, [hasGuardian]);
     return (
         <Grid container spacing={0.5}>
             <Grid item xs={3}>
@@ -147,7 +130,7 @@ const FormGrid = () => {
                 }}>
                     <SideBarContent
                         sideBarItems={sideBarItems}
-                        onClickButton={onClickButton}
+                        onClickSideBarItem={onClickSideBarItem}
 
                     />
                 </Box>
@@ -168,7 +151,11 @@ const FormGrid = () => {
                         position: 'relative',
                         flexDirection: 'column'
                     }}>
-
+                        {Object.keys(errors)?.length>0 && 
+                            <span style={{fontSize:12, margin:3, color:'#F95300'}}>
+                                <i>*Please enter all required fields.</i>
+                            </span>
+                        }
                         <MainContent
                             onClickArrow={onClickArrow}
                             currentForm={sideBarItems[currentSideBarIndex]}
@@ -180,13 +167,31 @@ const FormGrid = () => {
                             addressTypeValue={addressTypeValue}
                             onChangeAddressType={onChangeAddressType}
                             control={control}
+                            
                         />
                         {
-                            currentSideBarIndex === sideBarItems.filter(x => x.isVisible)?.length - 1
-                            &&
                             <Box sx={{ outline: '2px', }}>
-                                <Button sx={{ margin: 1 }} size="small" variant='outlined'>Cancel</Button>
-                                <Button type='submit' sx={{ margin: 1 }} size="small" variant='outlined'>Submit</Button>
+                                <Button sx={{ margin: 1, textTransform:'none' }} size="small" variant='outlined'>Cancel</Button>
+                                <Button 
+                                    type='submit'
+                                     
+                                    sx={{ margin: 1, textTransform:'none' }} 
+                                    size="small"
+                                    variant='outlined'
+                                    disabled={Object.keys(errors)?.length>0}
+                                >
+                                    {
+                                        isLoading?
+                                            (
+                                                <>
+                                                    <CircularProgress sx={{margin:0.4}} size={16} color="inherit" />
+                                                    <span>{'Submitting'}</span>
+                                                </>
+                                            )
+                                        :('Submit')
+                                    }
+                                        
+                                </Button>
                             </Box>
                         }
                     </Box>

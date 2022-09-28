@@ -26,17 +26,23 @@ const MainContent = ({
     const getCurrentForm = (currentForm) => {
         switch (currentForm.name) {
             case 'personal':
-                return <PersonalForm fieldName='person'  control={control}/>
+                return <PersonalForm {...currentForm} fieldName='person'  control={control}/>
             case 'address':
                 return <AddressListForm 
+                    {...currentForm}
                     addressList={addressList} 
                     onChangeAddressType={onChangeAddressType} 
                     addressTypeValue={addressTypeValue}
                 />
             case 'guardian':
-                return hasGuardian?<GuardianForm fieldName='guardian' control={control} />:null
+                return hasGuardian?<GuardianForm {...currentForm} fieldName='guardian' control={control} />:null
             case 'parents':
-                return <ParentsForm  hasGuardian={hasGuardian} getGuardian={getGuardian}/>
+                return <ParentsForm 
+                    {...currentForm}  
+                    hasGuardian={hasGuardian} 
+                    getGuardian={getGuardian}
+                   
+                />
             default:
                 return null
         }
