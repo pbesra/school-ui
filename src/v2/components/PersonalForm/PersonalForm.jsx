@@ -1,26 +1,17 @@
 import { Box, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Controller, useFormContext } from "react-hook-form";
 import React from 'react';
-const PersonalForm = ({ id, control, fieldName,formLabel }) => {
-    const {formState: {errors}}=useFormContext();
+const PersonalForm = ({ id, control, fieldName, formLabel }) => {
+    const { formState: { errors } } = useFormContext();
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflowY: 'auto',
-            maxHeight: '100%',
-            '::-webkit-scrollbar': { display: 'none' },
-            padding: 4,
-        }}>
-            <span style={{color:'#518DFF'}}>{formLabel}</span>
-            <Divider sx={{margin:1}}/>
+        <>
             <Box>
                 <Controller
                     name={`${fieldName}Gender`}
                     control={control}
                     defaultValue='Female'
                     render={({ field }) =>
-                        <FormControl fullWidth sx={{ marginTop: 4 }}>
+                        <FormControl sx={{ marginTop: 4, width: 250 }}>
                             <InputLabel id="select-label">Gender</InputLabel>
                             <Select
                                 labelId="select-label"
@@ -52,7 +43,7 @@ const PersonalForm = ({ id, control, fieldName,formLabel }) => {
                             InputLabelProps={{ required: true }}
                             error={!!errors?.[`${fieldName}FirstName`]}
                             helperText={errors?.[`${fieldName}FirstName`]?.message}
-                            
+
                         />}
                 />
             </Box>
@@ -100,7 +91,7 @@ const PersonalForm = ({ id, control, fieldName,formLabel }) => {
                             type='date'
                             label="Date of birth"
                             variant="standard"
-                            sx={{ marginTop: 3 }}
+                            sx={{ marginTop: 3, width: 250 }}
                             InputLabelProps={{ shrink: true, required: fieldName==='person'?true:false }}
                             error={!!errors?.[`${fieldName}DateOfBirth`]}
                             helperText={errors?.[`${fieldName}DateOfBirth`]?.message}
@@ -122,7 +113,7 @@ const PersonalForm = ({ id, control, fieldName,formLabel }) => {
                             label="Email"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            InputLabelProps={{ required: fieldName==='person'?false:true }}
+                            InputLabelProps={{ required: fieldName === 'person' ? false : true }}
                             error={!!errors?.[`${fieldName}Email`]}
                             helperText={errors?.[`${fieldName}Email`]?.message}
                         />
@@ -144,15 +135,14 @@ const PersonalForm = ({ id, control, fieldName,formLabel }) => {
                             sx={{ width: 250 }}
                             // need better approach: either create a new component or 
                             // make it customizable
-                            InputLabelProps={{ required: fieldName==='person'?false:true }}
+                            InputLabelProps={{ required: fieldName === 'person' ? false : true }}
                             error={!!errors?.[`${fieldName}Contact`]}
                             helperText={errors?.[`${fieldName}Contact`]?.message}
                         />}
                 />
 
             </Box>
-
-        </Box>
+        </>
     );
 }
 export default PersonalForm;

@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import AddressForm from "../AddressForm/AddressForm";
 import ParentsForm from "../ParentsForm/ParentsForm";
 import PersonalForm from "../PersonalForm/PersonalForm";
 import GuardianForm from "../GuardianForm/GuardianForm";
 import AddressListForm from "../AddressForm/AddressListForm";
+import FormContainer from "../FormContainer/FormContainer";
+import { useMemo } from "react";
 
 const MainContent = ({
     currentForm,
@@ -18,11 +19,14 @@ const MainContent = ({
     addressTypeValue,
     onChangeAddressType,
     control,
+    contacts, 
+    setContacts,
 }) => {
-    const addressList=[
+    const addressList=useMemo(()=>[
         {type: 'permanent', label:'Permanent address', name: 'permanent', isRequired:true, isDisabled:false,},
-        {type: 'current', label:'Current address',  name: 'current', isRequired:true, isDisabled:addressTypeValue},
-    ];
+        {type: 'current', label:'Current address',  name: 'current', isRequired:false, isDisabled:addressTypeValue},
+    ], [addressTypeValue]);
+    
     const getCurrentForm = (currentForm) => {
         switch (currentForm.name) {
             case 'personal':
@@ -41,7 +45,8 @@ const MainContent = ({
                     {...currentForm}  
                     hasGuardian={hasGuardian} 
                     getGuardian={getGuardian}
-                   
+                   contacts={contacts}
+                   setContacts={setContacts}
                 />
             default:
                 return null
@@ -52,7 +57,10 @@ const MainContent = ({
         <>
 
             {
-                getCurrentForm(currentForm)
+                <FormContainer formLabel={currentForm.formLabel}>
+                    {getCurrentForm(currentForm)}
+                </FormContainer>
+                
             }
             {
                 showLeftArrow &&

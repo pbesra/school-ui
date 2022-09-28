@@ -1,4 +1,5 @@
-import { Box, Button } from "@mui/material";
+import Button  from "@mui/material/Button";
+import Box  from "@mui/material/Box";
 
 const SideBarContent = ({ sideBarItems, onClickSideBarItem }) => {
 
@@ -19,6 +20,7 @@ const SideBarContent = ({ sideBarItems, onClickSideBarItem }) => {
                                         borderBottom: '1px solid #E7E7E7',
                                         cursor: 'pointer',
                                         borderRadius: 0,
+                                        textTransform:'none'
 
                                     }}
                                     key={`b${index}`}
@@ -26,6 +28,7 @@ const SideBarContent = ({ sideBarItems, onClickSideBarItem }) => {
 
                                 >
                                     {label}
+                                    
                                 </Button>
                             );
                         }

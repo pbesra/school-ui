@@ -15,7 +15,7 @@ const Address = ({
     const [addressName, setAddressName] = useState('');
     const [pinCode, setPinCode] = useState('');
 
-    const onChangeAddress = useCallback((e) => {
+    const onChangeAddress = (e) => {
         const value = e.target.value;
         switch (e.currentTarget.id) {
             case `${identity}_addressName`:
@@ -27,7 +27,7 @@ const Address = ({
             default:
                 break;
         }
-    }, []);
+    }
     useEffect(() => {
         setAddressName(defaultValues?.addressName ?? '');
         setPinCode(defaultValues?.pinCode ?? '');

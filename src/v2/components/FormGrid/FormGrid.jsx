@@ -14,22 +14,21 @@ import { useCallback } from 'react';
 const FormGrid = () => {
     const { control, handleSubmit, setValue, formState:{errors}, clearErrors} = useFormContext();
     const watchedFormFields=useWatch({name: 'permanentAddress'});
-    const watchedPermanentCurrentAddress=useWatch({name: 'isPermanentAddressEqualCurrent'});
-    const watchedHasGuardian=useWatch({name: 'hasGuadian'});
-        
+    const watchedPermanentCurrentAddress=useWatch({name: 'isPermanentAddressEqualCurrent'});        
     const [sideBarItems, setSideBarItems] = useState(FormInitObjects);
     const [currentSideBarIndex, setCurrentSideBarIndex] = useState(0);
     const [hasGuardian, setHasGuardian] = useState(false);
     const [addressTypeValue, setAddressTypeValue] = useState(false);
     const [isLoading, setLoading]=useState(false);
-    
+    const [contacts, setContacts] = useState([]);
+    const {getValues}=useFormContext();
 
-    const setAttr = useCallback((item, attr) => {
+    const setAttr = (item, attr) => {
         item.style.color = attr.color;
         item.isOpen = attr.isOpen;
         return item;
-    }, []);
-    const onClickSideBarItem = useCallback((name) => {
+    }
+    const onClickSideBarItem = (name) => {
         let currentIndex = currentSideBarIndex;
         const items = sideBarItems.map((x, index) => {
             let obj = x;
@@ -42,9 +41,9 @@ const FormGrid = () => {
         });
         setCurrentSideBarIndex(currentIndex);
         setSideBarItems(items);
-    }, []);
+    }
 
-    const onClickArrow = useCallback((direction) => {
+    const onClickArrow = (direction) => {
         console.log(direction);
         let newIndex = currentSideBarIndex;
         if (direction === 'right' && currentSideBarIndex < sideBarItems.length - 1) {
@@ -65,9 +64,9 @@ const FormGrid = () => {
             setCurrentSideBarIndex(newIndex);
             setSideBarItems(newSideBarItems);
         }
-    }, [sideBarItems, setSideBarItems, setCurrentSideBarIndex, setAttr, currentSideBarIndex]);
+    }
     
-    const getGuardian = useCallback((isGuardian) => {
+    const getGuardian = (isGuardian) => {
         const tempItems = sideBarItems.map((x) => {
             let obj = x;
             if (x.name === 'guardian') {
@@ -78,21 +77,23 @@ const FormGrid = () => {
         setHasGuardian(isGuardian);
         setSideBarItems(tempItems);
         setValue('hasGuardian', isGuardian);
-    }, []);
+    }
 
     
-    const onChangeAddressType = useCallback((addressValue) => {
+    const onChangeAddressType = (addressValue) => {
         setAddressTypeValue(addressValue);
         setValue('isPermanentAddressEqualCurrent', !!addressValue);
         
-    }, [setValue]);
-    const onSubmit = useCallback((data) => {
+    }
+    const onSubmit = (data) => {
         setLoading(true);
+
+        console.log('submit getValues()', getValues());
         console.log(data);
-        // const fullData=dataMapper(data);
-        // console.log(fullData);
+        const fullData=dataMapper(data);
+        console.log(fullData);
         setLoading(false);
-    }, []);
+    }
     console.log('errors', errors);
     useEffect(()=>{
         if(!!watchedPermanentCurrentAddress){
@@ -100,18 +101,25 @@ const FormGrid = () => {
             setValue("currentAddress.pinCode", watchedFormFields?.pinCode ?? '');
         }
     }, [watchedFormFields, setValue, watchedPermanentCurrentAddress]);
+    console.log('outside getValues()', getValues());
 
     // Remove errors from guardian if no guardian (if selected earlier)
     useEffect(()=>{
         if(!hasGuardian){
-            const items=['FirstName', 'LastName', 'Contact', 'dDateOfBirth'];
+            const items=['FirstName', 'LastName', 'Contact', 'DateOfBirth', 'Email'];
             items.forEach((name)=>{
                 const key=`guardian${name}`;
+                console.log('remove error for, ', key);
                 if(errors?.[key]){
                     console.log('remove error for, ', key);
                     clearErrors(key);
                 }
+                console.log('setValue', key);
+                if(key!=='guardianDateOfBirth'){
+                    setValue(key, '');
+                }
             });
+            
         }
     }, [hasGuardian]);
     return (
@@ -167,6 +175,8 @@ const FormGrid = () => {
                             addressTypeValue={addressTypeValue}
                             onChangeAddressType={onChangeAddressType}
                             control={control}
+                            contacts={contacts}
+                            setContacts={setContacts}
                             
                         />
                         {

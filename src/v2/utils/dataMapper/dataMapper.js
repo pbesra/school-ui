@@ -1,12 +1,11 @@
 
 export const dataMapper=(data)=>{
     let parentContacts=[{contact: data.parents.parentMainContact, name:'main'}];
-    let count=0;
     // Collect all parents contacts.
     for(var k in data.parents){
-        if(k.match(/^contacts[0-9]+$/)){
+        if(k.match(/^Contact[0-9]+$/)){
             if(!!data.parents?.[k]){
-                parentContacts.push({...data.parents?.[k], name: `Contact ${count+1}`});
+                parentContacts.push({contact: data.parents?.[k], name: k});
             }
         }
     }
@@ -26,7 +25,7 @@ export const dataMapper=(data)=>{
             email: data.parents.email,
         },
         addresses:[data.permanentAddress, data.currentAddress],
-        guardian:!!data.gender && !!data.firstName?{
+        guardian:!!data.guardianGender?.length>0 && !!data.guardianFirstName?.length>0?{
             gender: data.guardianGender,
             firstName: data.guardianFirstName,
             middleName: data.guardianMiddleName,
