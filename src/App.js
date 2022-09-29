@@ -8,20 +8,11 @@ import ErrorBoundary from './v2/components/ErrorBoundary/ErrorBoundary';
 function App() {
   return (
     <div className="App">
-      <div
-        // style={{
-        //   height: '100vh',
-        //   width: '100%',
-        //   justifyContent: 'center',
-        //   alignItems: 'center',
-        //   display: 'flex'
-        // }}
-        >
+      <div className='home-cls'>
         <ErrorBoundary>
           <Home />
         </ErrorBoundary>
       </div>
-
     </div>
   );
 }

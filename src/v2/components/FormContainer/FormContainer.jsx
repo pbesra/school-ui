@@ -1,4 +1,6 @@
-import { Box, Divider } from "@mui/material";
+import React from 'react';
+import Divider  from "@mui/material/Divider";
+import Box from "@mui/material/Box";
 
 const FormContainer=({children, formLabel})=>{
     return(

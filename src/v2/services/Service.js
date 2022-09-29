@@ -1,12 +1,19 @@
 import axios from "axios";
+import Resource, { uriNames } from "../resources/constants";
 
 class Service {
     _headers = { 'Content-Type': 'application/json' };
     constructor(headers) {
         this._headers = headers;
     }
-    async post(body, uri = '') {
-        return await axios.post(uri, body, this._headers)
+    getFullUri({uri, endpoint, uriName}){
+        return `${Resource.api.getUriByName(uriName)}/${endpoint}` 
+            ?? `${Resource.api.getUriByName(uriNames.main)}/${endpoint}` 
+            ?? `${uri}/${endpoint}`;
+    }
+    async post({payload, uri = '', endpoint, uriName}) {
+        const fullUri=this.getFullUri({uri, endpoint, uriName});
+        return await axios.post(fullUri, payload, this._headers)
             .then((response) => {
                 return response;
             })
