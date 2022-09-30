@@ -142,6 +142,7 @@ const FormGrid = () => {
             });
         }, 2000);
     }, []);
+    console.log(errors);
     return (
         <>
             <Snackbar
@@ -194,7 +195,6 @@ const FormGrid = () => {
                             <MainContent
                                 onClickArrow={onClickArrow}
                                 currentForm={sideBarItems[currentSideBarIndex]}
-                                currentIndex={currentSideBarIndex}
                                 showLeftArrow={currentSideBarIndex > 0}
                                 showRightArrow={currentSideBarIndex < sideBarItems.filter(x => x.isVisible)?.length - 1}
                                 getGuardian={getGuardian}

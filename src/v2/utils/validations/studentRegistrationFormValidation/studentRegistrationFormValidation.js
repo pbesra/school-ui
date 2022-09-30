@@ -51,24 +51,26 @@ export const studentRegistrationFormValidationSchema = yup.object().shape({
                 .min(10, 'Must be at least 10 digits'),
         }),
         
-    // guardianDateOfBirth: yup.string()
-    //     .test(
-    //         "",
-    //         "At least 21 years old.",
-    //         (value) => {
-    //             if(value?.length===0){
-    //                 return true;
-    //             }
-    //             const currentDate = moment(new Date());
-    //             const enteredDate = moment(value);
-    //             const years=currentDate.diff(enteredDate, 'years');
-    //             return years>=21;
-    //         }
-    //     )
-    //     .when('hasGuardian', {
-    //         is: true,
-    //         then: yup.string().required('Date of birth is required.'),
-    //     }),
+    guardianDateOfBirth: yup.string()
+        .when('hasGuardian', {
+            is: true,
+            then: yup.string().required('Contact is required.')
+                .min(10, 'Date of birth is required.'),
+        })
+        .test(
+            "",
+            "At least 21 years old.",
+            (value) => {
+                if(value?.length===0){
+                    return true;
+                }
+                const currentDate = moment(new Date());
+                const enteredDate = moment(value);
+                const years=currentDate.diff(enteredDate, 'years');
+                return years>=21;
+            }
+        ),
+        
     permanentAddress: yup.object().shape({
         addressName: yup.string().required('Permanent address is required.'),
         pinCode: yup.string().required('Pin code for permanent address is required.')

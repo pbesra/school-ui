@@ -11,7 +11,8 @@ const AppProvider=()=>{
             hasGuardian:false, 
             parents:{
                 parentMainContact:''
-            }
+            },
+            guardianDateOfBirth:'',
         },
         resolver: yupResolver(studentRegistrationFormValidationSchema),
     });

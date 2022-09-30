@@ -121,7 +121,7 @@ const PersonalForm = ({ id, control, fieldName, formLabel }) => {
                             label="Email"
                             variant="standard"
                             sx={{ width: 250, margin: 1 }}
-                            InputLabelProps={{ required: fieldName === 'person' ? false : true }}
+                            InputLabelProps={{ required: false }}
                             error={!!errors?.[`${fieldName}Email`]}
                             helperText={errors?.[`${fieldName}Email`]?.message}
                         />
