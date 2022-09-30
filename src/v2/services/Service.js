@@ -17,6 +17,9 @@ class Service {
             .then((response) => {
                 return response;
             })
+            .catch((error)=>{
+                console.log(error);
+            });
     }
     async get(uri = '') {
         return await axios.get(uri, this._headers)

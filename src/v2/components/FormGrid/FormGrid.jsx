@@ -119,24 +119,15 @@ const FormGrid = () => {
     }, [hasGuardian]);
     const onSubmit = useCallback((data) => {
         setLoading(true);
-
         // Remove set timeout later
         setTimeout(() => {
             const fullData = dataMapper(data);
             var service = new Service();
             service.post({ payload: fullData, endpoint: endPoints.student, uriName: uriNames.main }).then((response) => {
                 if (response?.status >= 200 && response?.status < 300) {
-                    setIsSnackbarOpen((prev)=>{
-                        prev.isOpen=true;
-                        prev.message='Student form submitted.';
-                        return prev;
-                    });
+                    setIsSnackbarOpen({isOpen:true, message:'Student form submitted'});
                 }else{
-                    setIsSnackbarOpen((prev)=>{
-                        prev.isOpen=true;
-                        prev.message='Something went wrong.';
-                        return prev;
-                    });
+                    setIsSnackbarOpen({isOpen:true, message:'Something went wrong.'});
                 }
                 setLoading(false);
             });
